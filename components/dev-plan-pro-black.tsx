@@ -10,7 +10,6 @@ import {
   ChevronRight,
   BookOpen,
   Rocket,
-  Search,
   ChevronLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -98,31 +97,6 @@ export function DevPlanProBlack() {
         }
       ]
     }
-    // {
-    //   title: 'Research',
-    //   icon: Search,
-    //   color: 'from-teal-400 to-cyan-600',
-    //   items: [
-    //     {
-    //       title: 'The Impact of Low-Code Platforms',
-    //       content: 'Our study reveals how low-code solutions are...',
-    //       image:
-    //         'https://res.cloudinary.com/ds98aq9ei/image/upload/v1727702809/pexels-olia-danilevich-4974912_mp49wp.jpg'
-    //     },
-    //     {
-    //       title: "Quantum Computing: A Developer's Perspective",
-    //       content: 'Exploring the potential applications and...',
-    //       image:
-    //         'https://res.cloudinary.com/ds98aq9ei/image/upload/v1727702713/pexels-cottonbro-8721342_jav5kr.jpg'
-    //     },
-    //     {
-    //       title: 'Sustainable Software Engineering Practices',
-    //       content: 'Investigating methods to reduce the carbon...',
-    //       image:
-    //         'https://res.cloudinary.com/ds98aq9ei/image/upload/v1727702556/pexels-rdne-5757078_mkjtjs.jpg'
-    //     }
-    //   ]
-    // },
   ];
 
   const [activeIndices, setActiveIndices] = useState({
@@ -131,17 +105,16 @@ export function DevPlanProBlack() {
     Research: 0
   });
 
-  const handleScroll = (section, direction) => {
-    setActiveIndices((prev) => ({
-      ...prev,
-      [section]:
-        (prev[section] +
-          direction +
-          sections.find((s) => s.title === section).items.length) %
-        sections.find((s) => s.title === section).items.length
-    }));
-  };
-
+  const handleScroll = (section: string, direction: number) => {
+    setActiveIndices((prev) => {
+      const sectionIndex = sections.find((s) => s.title === section)?.items.length ?? 0;
+      const newIndex = (prev[section as keyof typeof prev] + direction + sectionIndex) % sectionIndex;
+      return {
+        ...prev,
+        [section as keyof typeof prev]: newIndex
+      };
+    });
+  }
   return (
     <div className="flex flex-col min-h-screen bg-black text-gray-200">
       {/* Top Navigation */}
@@ -248,7 +221,7 @@ export function DevPlanProBlack() {
                   className="flex transition-transform duration-300 ease-in-out mb-6"
                   style={{
                     transform: `translateX(-${
-                      activeIndices[section.title] * 100
+                      activeIndices[section.title as keyof typeof activeIndices] * 100
                     }%)`
                   }}
                 >
@@ -296,7 +269,7 @@ export function DevPlanProBlack() {
               style={{
                 backgroundImage:
                   "url('https://res.cloudinary.com/ds98aq9ei/image/upload/v1727706493/pexels-tima-miroshnichenko-6499165_lbzgiq.jpg?height=1200&width=2000')",
-                 backgroundAttachment: 'fixed'
+                backgroundAttachment: 'fixed'
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent"></div>
